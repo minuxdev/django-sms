@@ -53,14 +53,14 @@ class Roll(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="roll",
+        related_name="rolls",
     )
     classroom = models.ForeignKey(
         to=Classroom,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="roll",
+        related_name="rolls",
     )
     student = models.OneToOneField(
         to=Student, on_delete=models.CASCADE, null=True, blank=True
@@ -80,21 +80,21 @@ class Grade(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="grade",
+        related_name="grades",
     )
     classroom = models.ForeignKey(
         to=Classroom,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="grade",
+        related_name="grades",
     )
     student = models.ForeignKey(
         to=Student,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="grade",
+        related_name="grades",
     )
     test_1 = models.FloatField(default=0, null=True, blank=True)
     test_2 = models.FloatField(default=0, null=True, blank=True)
@@ -125,3 +125,21 @@ class Grade(models.Model):
 
     def __str__(self):
         return str(self.student)
+
+
+class HomeWork(models.Model):
+    teacher = models.ForeignKey(
+        to=Teacher,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="homeworks",
+    )
+    classroom = models.ManyToManyField(to=Classroom, blank=True)
+    topic = models.CharField(max_length=255)
+    content = models.TextField(null=True, blank=True)
+    date_create = models.DateTimeField(auto_now_add=True)
+    date_close = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.topic)

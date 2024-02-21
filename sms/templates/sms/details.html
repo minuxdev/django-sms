@@ -1,0 +1,19 @@
+{% extends 'sms/base.html' %}
+{% block title %}
+    Detail View
+{% endblock title %}
+{% block content %}
+    {% if student %}
+        {% include 'sms/partials/student_detail.html' with student=student %}
+    {% elif course %}
+        {% include 'sms/partials/course_detail.html' with course=course %}
+    {% elif teacher %}
+        {% include 'sms/partials/teacher_detail.html' with teacher=teacher %}
+    {% elif grade %}
+        {% include 'sms/partials/grade_detail.html' with grade=grade %}
+    {% elif homework %}
+        {% include 'sms/partials/homework_detail.html' with homework=homework %}
+    {% else %}
+        {% include 'sms/partials/classroom_detail.html' with classroom=classroom %}
+    {% endif %}
+{% endblock content %}

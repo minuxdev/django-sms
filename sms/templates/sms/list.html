@@ -1,0 +1,19 @@
+{% extends 'sms/base.html' %}
+{% block title %}
+    List Students
+{% endblock title %}
+{% block content %}
+    {% if students %}
+        {% include 'sms/partials/students.html' with students=students %}
+    {% elif courses %}
+        {% include 'sms/partials/courses.html' with courses=courses %}
+    {% elif teachers %}
+        {% include 'sms/partials/teachers.html' with teachers=teachers %}
+    {% elif grades %}
+        {% include 'sms/partials/grades.html' with grades=grades %}
+    {% elif homeworks %}
+        {% include 'sms/partials/homeworks.html' with homeworks=homeworks %}
+    {% else %}
+        {% include 'sms/partials/classrooms.html' with classrooms=classrooms %}
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,52 @@
+<h1>Detail Grade</h1>
+
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>STUDENT</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>MT-A</th>
+        <th>MT-B</th>
+        <th>MT-C</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_student' pk=grade.student.pk %}">{{grade.student}}</a>
+        </td>
+        {% if grade.a %}
+        <td>{{grade.a.test_1}}</td>
+        <td>{{grade.a.test_2}}</td>
+        <td>{{grade.a.test_average}}</td>
+        <td>{{grade.a.exam}}</td>
+        {% endif %} {% if grade.b %}
+        <td>{{grade.b.test_1}}</td>
+        <td>{{grade.b.test_2}}</td>
+        <td>{{grade.b.test_average}}</td>
+        <td>{{grade.b.exam}}</td>
+        {% endif %} {% if grade.c %}
+        <td>{{grade.c.test_1}}</td>
+        <td>{{grade.c.test_2}}</td>
+        <td>{{grade.c.test_average}}</td>
+        <td>{{grade.c.exam}}</td>
+        <td>{{grade.a.section_average}}</td>
+        <td>{{grade.b.section_average}}</td>
+        <td>{{grade.c.section_average}}</td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+</div>

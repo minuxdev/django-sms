@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Classroom, Course, Grade, Roll, Subject
+from .models import Classroom, Course, Grade, HomeWork, Roll, Subject
 
 
 @admin.register(Course)
@@ -51,4 +51,14 @@ class GradeAdmin(admin.ModelAdmin):
         "section_average",
         "section",
         "year",
+    )
+
+
+@admin.register(HomeWork)
+class HomeWorkAdmin(admin.ModelAdmin):
+    list_display = (
+        "teacher",
+        "topic",
+        "date_create",
+        "date_close",
     )

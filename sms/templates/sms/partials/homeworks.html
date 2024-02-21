@@ -1,0 +1,28 @@
+<h1>List Home Works</h1>
+
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>Teacher</th>
+        <th>Topic</th>
+        <th>Date Open</th>
+        <th>Date Close</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for hw in homeworks %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_teacher' pk=hw.teacher.pk %}">{{hw.teacher}}</a>
+        </td>
+        <td>
+          <a href="{% url 'sms:detail_homework' pk=hw.pk %}">{{hw.topic}}</a>
+        </td>
+        <td>{{hw.date_create}}</td>
+        <td>{{hw.date_close}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      div {
+        overflow: auto;
+      }
+
+      table {
+        table-layout: fixed;
+        border-collapse: collapse;
+        width: 100%;
+        text-align: left;
+        min-width: 768px;
+      }
+
+      tr,
+      td,
+      th {
+        border: 1px solid #ccc;
+        padding: 0.5rem 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    {% include 'sms/partials/sidebar.html' %}
+    <br />
+    {% block content %} {% endblock content %}
+  </body>
+</html>

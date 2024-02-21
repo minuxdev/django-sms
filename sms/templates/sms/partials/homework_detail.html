@@ -1,0 +1,8 @@
+<h1>{{homework.topic}}</h1>
+<p>
+  Teacher:
+  <a href="{% url 'sms:detail_teacher' pk=homework.teacher.pk %}">{{homework.teacher}}</a>
+</p>
+<p>Date Create: {{homework.date_create}}</p>
+<p>Date Close: {{homework.date_create}}</p>
+<div>{{homework.content}}</div>

@@ -1,0 +1,19 @@
+<div>
+  <h1>{{classroom.name}}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>STUDENT</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cr in classroom.roll.all %}
+      <tr>
+        <td>{{cr.pk}}</td>
+        <td>{{cr.student}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
