@@ -1,0 +1,7 @@
+{% extends 'sms/base.html' %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %} {{ form }}
+        <button>Submit</button>
+    </form>
+{% endblock content %}

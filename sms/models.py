@@ -1,7 +1,4 @@
-import math
-
 from django.db import models
-from django.db.models import constraints
 
 from users.models import Student, Teacher
 
@@ -17,12 +14,17 @@ class Course(models.Model):
     year = models.DateField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name} - {self.year}"
+        year = self.year.year
+        return f"{self.name} - {year}"
 
 
 class Classroom(models.Model):
     course = models.ForeignKey(
-        to=Course, on_delete=models.CASCADE, null=True, blank=True
+        to=Course,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="classrooms",
     )
     name = models.CharField(max_length=100)
     year = models.DateField(auto_now=True)
@@ -35,8 +37,11 @@ class Subject(models.Model):
     course = models.ManyToManyField(
         to=Course,
         blank=True,
+        related_name="subjects",
     )
-    teacher = models.ManyToManyField(to=Teacher, blank=True)
+    teacher = models.ManyToManyField(
+        to=Teacher, blank=True, related_name="subjects"
+    )
     name = models.CharField(max_length=100)
     section = models.CharField(
         max_length=50, choices=SECTION.choices, default=SECTION.A
@@ -95,6 +100,13 @@ class Grade(models.Model):
         null=True,
         blank=True,
         related_name="grades",
+    )
+    teacher = models.ForeignKey(
+        to=Teacher,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="t_grades",
     )
     test_1 = models.FloatField(default=0, null=True, blank=True)
     test_2 = models.FloatField(default=0, null=True, blank=True)

@@ -1,2 +1,32 @@
-<h1>List Teachers</h1>
-{% for t in teachers %}{{ t }}{% endfor %}
+<div>
+  <table>
+    <caption>
+      List Teachers
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Year</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for teacher in teachers %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_teacher' pk=teacher.pk %}">{{teacher.pk}}</a>
+        </td>
+        <td>{{teacher.username}}</td>
+        <td>{{teacher.username}}</td>
+        <td>{{teacher.date_join}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

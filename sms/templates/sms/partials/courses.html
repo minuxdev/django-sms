@@ -1,2 +1,29 @@
 <h1>List Courses</h1>
-{% for course in courses %} {{ course }}{% endfor %}
+
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Year</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_course' pk=course.pk %}">{{course.pk}}</a>
+        </td>
+        <td>{{course.name}}</td>
+        <td>{{course.year}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

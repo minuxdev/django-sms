@@ -1,2 +1,40 @@
-<h1>List Students</h1>
-{% for st in students %}{{ st }}{% endfor %}
+<form>
+  {{form}}
+  <button>submit</button>
+</form>
+<div>
+  <table>
+    <caption>
+      List Students
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Course</th>
+        <th>Classroom</th>
+        <th>Year</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_student' pk=student.pk %}">{{student.pk}}</a>
+        </td>
+        <td>{{student.student.username}}</td>
+        <td>{{student.student.username}}</td>
+        <td>{{student.course}}</td>
+        <td>{{student.classroom}}</td>
+        <td>{{student.year}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

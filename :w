@@ -139,33 +139,35 @@ class ClassroomCreateView(CreateView):
 
 
 # GRADE
-def format_student_grades(course):
+def format_student_grades(course, student=None):
     a = None
     b = None
     c = None
     __student = None
     grades = []
-    for roll in course.rolls.all():
+    for student in Student.objects.all():
         for subject in course.subjects.all():
-            for grade in subject.grades.filter(student=roll.student):
-                __student = grade.student
-                print(__student)
-                if grade.section == "A":
-                    a = grade or None
-                elif grade.section == "B":
-                    b = grade or None
-                elif grade.section == "C":
-                    c = grade or None
-            if __student is not None:
-                grades.append(
-                    {
-                        "student": __student,
-                        "subject": subject,
-                        "a": a,
-                        "b": b,
-                        "c": c,
-                    }
-                )
+            __grades = subject.grades.all()
+            __length = len(__grades)
+            print(__grades)
+            for i in range(__length):
+                __student = __grades[i].student
+                if __grades[i].section == "A":
+                    a = __grades[i] or None
+                elif __grades[i].section == "B":
+                    b = __grades[i] or None
+                elif __grades[i].section == "C":
+                    c = __grades[i] or None
+                if i + 1 == __length:
+                    grades.append(
+                        {
+                            "student": __student,
+                            "subject": subject,
+                            "a": a,
+                            "b": b,
+                            "c": c,
+                        }
+                    )
 
             a = None
             b = None

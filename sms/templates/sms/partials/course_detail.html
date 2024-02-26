@@ -1,2 +1,63 @@
-<h1>List Courses</h1>
-{{course}}
+<h1>{{course.name}}</h1>
+<p>{{course.year}}</p>
+
+<div>
+  <table>
+    <caption>
+      Subjects
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Section</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in course.subjects.all %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject.pk}}</a>
+        </td>
+        <td>{{subject.name}}</td>
+        <td>{{subject.section}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div>
+  <table>
+    <caption>
+      Classess
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Year</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for class in course.classrooms.all %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_classroom' pk=class.pk %}">{{class.pk}}</a>
+        </td>
+        <td>{{class.name}}</td>
+        <td>{{class.year}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

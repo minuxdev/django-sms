@@ -1,2 +1,54 @@
-<h1>Student Details</h1>
-{{student}}
+<h1>{{student.student}}</h1>
+<p><b>Course: </b>{{student.course}}</p>
+<p><b>Classroom: </b>{{student.classroom}}</p>
+<p><b>Year: </b>{{student.year}}</p>
+
+<div>
+  <table>
+    <caption>
+      Grades
+    </caption>
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>MT-A</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>MT-B</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>MT-C</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in student.student.grades.all %}
+      <tr>
+        <td>{{g.subject}}</td>
+        <td>{{g.test_1}}</td>
+        <td>{{g.test_2}}</td>
+        <td>{{g.test_average}}</td>
+        <td>{{g.exam}}</td>
+        <td>{{g.section_average}}</td>
+        <td>{{g.test_1}}</td>
+        <td>{{g.test_2}}</td>
+        <td>{{g.test_average}}</td>
+        <td>{{g.exam}}</td>
+        <td>{{g.section_average}}</td>
+        <td>{{g.test_1}}</td>
+        <td>{{g.test_2}}</td>
+        <td>{{g.test_average}}</td>
+        <td>{{g.exam}}</td>
+        <td>{{g.section_average}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

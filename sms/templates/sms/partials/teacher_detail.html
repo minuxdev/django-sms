@@ -1,2 +1,30 @@
-<h1>Teacher Details</h1>
-{{teacher}}
+<h1>{{teacher}}</h1>
+<p><b>Date Join: </b>{{teacher.date_join}}</p>
+<div>
+  <table>
+    <caption>
+      List Subjects
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Subject</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in teacher.subjects.all %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject.pk}}</a>
+        </td>
+        <td>{{subject.name}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

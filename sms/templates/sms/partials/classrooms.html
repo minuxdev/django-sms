@@ -1,21 +1,34 @@
-{% for classroom in classrooms %}
+<form>
+  {{form}}
+  <button>submit</button>
+</form>
 <div>
   <h1>{{classroom.name}}</h1>
   <table>
     <thead>
       <tr>
         <th>ID</th>
-        <th>STUDENT</th>
+        <th>Name</th>
+        <th>Course</th>
+        <th>Year</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      {% for cr in classroom.roll.all %}
+      {% for classroom in classrooms %}
       <tr>
-        <td>{{cr.pk}}</td>
-        <td>{{cr.student}}</td>
+        <td>
+          <a href="{% url 'sms:detail_classroom' pk=classroom.pk %}">{{classroom.pk}}</a>
+        </td>
+        <td>{{classroom.name}}</td>
+        <td>{{classroom.course}}</td>
+        <td>{{classroom.year}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
-{% endfor %}
