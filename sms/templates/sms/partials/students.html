@@ -10,8 +10,7 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Full Name</th>
         <th>Course</th>
         <th>Classroom</th>
         <th>Year</th>
@@ -22,10 +21,12 @@
       {% for student in students %}
       <tr>
         <td>
-          <a href="{% url 'sms:detail_student' pk=student.pk %}">{{student.pk}}</a>
+          <a href="{% url 'sms:detail_student' pk=student.pk %}">{{student}}</a>
         </td>
-        <td>{{student.student.username}}</td>
-        <td>{{student.student.username}}</td>
+        <td>
+          {{student.student.profile.first_name}}
+          {{student.student.profile.last_name}}
+        </td>
         <td>{{student.course}}</td>
         <td>{{student.classroom}}</td>
         <td>{{student.year}}</td>

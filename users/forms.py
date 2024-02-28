@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.admin import UserChangeForm, UserCreationForm
 
-from .models import CustomUser, Profile
+from .models import CustomUser, Profile, Student
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -24,10 +24,15 @@ class UserForm(UserChangeForm):
         )
 
 
+class StudentForm(UserRegistrationForm):
+    class Meta(UserRegistrationForm.Meta):
+        model = Student
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        exclude = ("id",)
+        fields = "__all__"
         widgets = {
             "dob": forms.DateInput(attrs={"type": "date"}),
             "phone_no": forms.NumberInput(

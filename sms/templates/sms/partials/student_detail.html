@@ -1,7 +1,19 @@
-<h1>{{student.student}}</h1>
-<p><b>Course: </b>{{student.course}}</p>
-<p><b>Classroom: </b>{{student.classroom}}</p>
-<p><b>Year: </b>{{student.year}}</p>
+<h1>{{student.roll.profile.first_name}} {{student.roll.profile.last_name}}</h1>
+<p><b>Date of Birth: </b>{{student.roll.student.profile.dob}}</p>
+<p><b>Phone No: </b>{{student.roll.student.profile.phone_no}}</p>
+<p><b>Guardian Name: </b>{{student.roll.student.profile.guardian_name}}</p>
+<p>
+  <b>Guardian Phone No: </b>{{student.roll.student.profile.guardian_phone_no}}
+</p>
+<p><b>Code of Regist: </b>{{student.student}}</p>
+<p><b>Course: </b>{{student.roll.course}}</p>
+<p><b>Classroom: </b>{{student.roll.classroom}}</p>
+<p><b>Date Join: </b>{{student.roll.year}}</p>
+
+<form method="get">
+  {{form.subject}}
+  <button>submit</button>
+</form>
 
 <div>
   <table>
@@ -15,38 +27,40 @@
         <th>ACS 2</th>
         <th>MACS</th>
         <th>ACP</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
+        <th>ACS 1</th>
+        <th>ACS 2</th>
+        <th>MACS</th>
+        <th>ACP</th>
         <th>MT-A</th>
-        <th>ACS 1</th>
-        <th>ACS 2</th>
-        <th>MACS</th>
-        <th>ACP</th>
         <th>MT-B</th>
-        <th>ACS 1</th>
-        <th>ACS 2</th>
-        <th>MACS</th>
-        <th>ACP</th>
         <th>MT-C</th>
       </tr>
     </thead>
     <tbody>
-      {% for g in student.student.grades.all %}
+      {% for g in student.grades %}
       <tr>
-        <td>{{g.subject}}</td>
-        <td>{{g.test_1}}</td>
-        <td>{{g.test_2}}</td>
-        <td>{{g.test_average}}</td>
-        <td>{{g.exam}}</td>
-        <td>{{g.section_average}}</td>
-        <td>{{g.test_1}}</td>
-        <td>{{g.test_2}}</td>
-        <td>{{g.test_average}}</td>
-        <td>{{g.exam}}</td>
-        <td>{{g.section_average}}</td>
-        <td>{{g.test_1}}</td>
-        <td>{{g.test_2}}</td>
-        <td>{{g.test_average}}</td>
-        <td>{{g.exam}}</td>
-        <td>{{g.section_average}}</td>
+        <td>
+          <a href="{% url 'sms:detail_subject' pk=g.subject.pk %}">{{g.subject}}</a>
+        </td>
+        <td>{{g.a.test_1}}</td>
+        <td>{{g.a.test_2}}</td>
+        <td>{{g.a.test_average}}</td>
+        <td>{{g.a.exam}}</td>
+        <td>{{g.b.test_1}}</td>
+        <td>{{g.b.test_2}}</td>
+        <td>{{g.b.test_average}}</td>
+        <td>{{g.b.exam}}</td>
+        <td>{{g.c.test_1}}</td>
+        <td>{{g.c.test_2}}</td>
+        <td>{{g.c.test_average}}</td>
+        <td>{{g.c.exam}}</td>
+        <td>{{g.a.section_average}}</td>
+        <td>{{g.b.section_average}}</td>
+        <td>{{g.c.section_average}}</td>
       </tr>
       {% endfor %}
     </tbody>

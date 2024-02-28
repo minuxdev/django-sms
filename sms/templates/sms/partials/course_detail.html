@@ -1,36 +1,7 @@
 <h1>{{course.name}}</h1>
 <p>{{course.year}}</p>
 
-<div>
-  <table>
-    <caption>
-      Subjects
-    </caption>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Section</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for subject in course.subjects.all %}
-      <tr>
-        <td>
-          <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject.pk}}</a>
-        </td>
-        <td>{{subject.name}}</td>
-        <td>{{subject.section}}</td>
-        <td>
-          <a href="#">Edit</a>
-          <a href="#">Del</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+<!--CLASSESS-->
 <div>
   <table>
     <caption>
@@ -52,6 +23,38 @@
         </td>
         <td>{{class.name}}</td>
         <td>{{class.year}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!--SUBJECTS-->
+<div>
+  <table>
+    <caption>
+      Subjects
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Section</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in course.subjects.all %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject.pk}}</a>
+        </td>
+        <td>{{subject.name}}</td>
+        <td>{{subject.section}}</td>
         <td>
           <a href="#">Edit</a>
           <a href="#">Del</a>

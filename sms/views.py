@@ -5,14 +5,18 @@ from sms.forms import (
     ClassroomForm,
     CourseForm,
     GetClassForm,
+    GetGradeForm,
+    GetStudentForm,
     GradeForm,
     HomeWorkForm,
     RollForm,
     SubjectForm,
 )
-from users.models import CustomUser, Student, Teacher
+from users.forms import StudentForm
+from users.models import CustomUser, Profile, Student, Teacher
 
 from .models import Classroom, Course, Grade, HomeWork, Roll, Subject
+from .utils import format_grades
 
 
 # ROLLS
@@ -20,6 +24,15 @@ class RollView(ListView):
     template_name = "sms/list.html"
     model = Roll
     context_object_name = "students"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = GetStudentForm
+        classroom = self.request.GET.get("classroom", None)
+
+        if classroom:
+            context["students"] = Roll.objects.filter(classroom=classroom)
+        return context
 
 
 class RollDetailView(DetailView):
@@ -29,8 +42,17 @@ class RollDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.object.student)
-        # context["student"] = list(format_student_grades(self.object.student))
+
+        subject = self.request.GET.get("subject", None)
+        context["student"] = {
+            "roll": self.object,
+            "grades": format_grades(
+                course=self.object.course,
+                student=self.object.student,
+                subject=subject,
+            ),
+        }
+        context["form"] = GetGradeForm(self.request.user)
         return context
 
 
@@ -39,6 +61,32 @@ class RollCreateView(CreateView):
     form_class = RollForm
     model = Roll
     success_url = reverse_lazy("sms:dashboard")
+
+    def form_valid(self, form):
+        __id = Student.objects.count() + 1
+        data = {
+            "username": f"1003{__id}",
+            "password1": f"1003{__id}@2024",
+            "password2": f"1003{__id}@2024",
+            "role": "STUDENT",
+        }
+        s_form = StudentForm(data=data)
+        student = s_form.save()
+
+        profile = Profile(user=student)
+        for key, value in form.cleaned_data.items():
+            setattr(profile, key, value)
+        profile.save()
+
+        role = form.save(commit=False)
+        role.student = student
+        role.save()
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
 
 
 # TEACHER
@@ -106,9 +154,7 @@ class ClassroomView(ListView):
         # Filter classes based on query
         course = self.request.GET.get("course", None)
         if course is not None and course != "":
-            context["classrooms"] = Classroom.objects.filter(
-                course__name=course
-            )
+            context["classrooms"] = Classroom.objects.filter(course=course)
 
         # List filtered classes by user in form
         context["form"] = GetClassForm
@@ -116,12 +162,7 @@ class ClassroomView(ListView):
         if not user.is_authenticated:
             return context
         if user.is_authenticated:
-            if user.role == "STUDENT":
-                print(user, user.role)
-                # context["form"] = GetClassForm(classroom=user.roll.classroom)
-            elif user.role == "TEACHER":
-                print(user, user.role)
-                # context["form"] = GetClassForm(classroom=user.roll.classroom)
+            context["form"] = GetClassForm(user=user)
         return context
 
 
@@ -139,50 +180,26 @@ class ClassroomCreateView(CreateView):
 
 
 # GRADE
-def format_student_grades(course):
-    a = None
-    b = None
-    c = None
-    __student = None
-    grades = []
-    for roll in course.rolls.all():
-        for subject in course.subjects.all():
-            for grade in subject.grades.filter(student=roll.student):
-                __student = grade.student
-                print(__student)
-                if grade.section == "A":
-                    a = grade or None
-                elif grade.section == "B":
-                    b = grade or None
-                elif grade.section == "C":
-                    c = grade or None
-            if __student is not None:
-                grades.append(
-                    {
-                        "student": __student,
-                        "subject": subject,
-                        "a": a,
-                        "b": b,
-                        "c": c,
-                    }
-                )
-
-            a = None
-            b = None
-            c = None
-            __student = None
-    return grades
-
-
 class GradeView(ListView):
     template_name = "sms/list.html"
     model = Student
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context["grades"] = []
-        course = Course.objects.first()
-        context["grades"] = format_student_grades(course)
+        course = Course.objects.last()
+
+        # Get query parameters
+        subject = self.request.GET.get("subject", None)
+        classroom = self.request.GET.get("classroom", 1)
+        if classroom:
+            course = Classroom.objects.get(pk=classroom).course
+        context["grades"] = format_grades(
+            course,
+            subject=subject or course.subjects.first().pk,
+        )
+
+        context["form"] = GetGradeForm(user=self.request.user)
+
         return context
 
 
@@ -193,8 +210,9 @@ class GradeDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        student = self.object
-        context["grade"] = format_student_grades(student)
+        student = self.object.student
+        course = student.roll.course
+        context["grade"] = format_grades(course, student=student)
         return context
 
 

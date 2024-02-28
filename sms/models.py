@@ -147,7 +147,18 @@ class HomeWork(models.Model):
         blank=True,
         related_name="homeworks",
     )
-    classroom = models.ManyToManyField(to=Classroom, blank=True)
+    classroom = models.ManyToManyField(
+        to=Classroom,
+        blank=True,
+        related_name="homeworks",
+    )
+    subject = models.ForeignKey(
+        to=Subject,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="homeworks",
+    )
     topic = models.CharField(max_length=255)
     content = models.TextField(null=True, blank=True)
     date_create = models.DateTimeField(auto_now_add=True)

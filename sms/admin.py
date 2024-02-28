@@ -58,6 +58,7 @@ class GradeAdmin(admin.ModelAdmin):
 class HomeWorkAdmin(admin.ModelAdmin):
     list_display = (
         "teacher",
+        "subject",
         "topic",
         "date_create",
         "date_close",

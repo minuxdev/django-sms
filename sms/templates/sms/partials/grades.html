@@ -1,10 +1,13 @@
-<tr>
-  List Grades
-</tr>
+<form method="get" action="{% url 'sms:list_grade' %}">
+  {{form}}
+  <button>submit</button>
+</form>
 
 <div>
-  <form method="get">{% csrf_token %}</form>
   <table>
+    <caption>
+      List Grades
+    </caption>
     <thead>
       <tr>
         <th>Student</th>
@@ -29,7 +32,9 @@
     <tbody>
       {% for g in grades %}
       <tr>
-        <td>{{g.student}}</td>
+        <td>
+          <a href="{% url 'sms:detail_student' pk=g.student.roll.pk %}">{{g.student}}</a>
+        </td>
         <td>{{g.subject}}</td>
         <td>{{g.a.test_1}}</td>
         <td>{{g.a.test_2}}</td>

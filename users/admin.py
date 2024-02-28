@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import UserForm, UserRegistrationForm
-from .models import CustomUser, Student, Teacher
+from .models import CustomUser, Profile, Student, Teacher
 
 
 class CustomUserAdmin(UserAdmin):
@@ -86,4 +86,13 @@ class StudentAdmin(admin.ModelAdmin):
         "is_superuser",
         "date_join",
         "role",
+    )
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        "first_name",
+        "last_name",
+        "dob",
     )

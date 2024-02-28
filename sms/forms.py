@@ -4,15 +4,22 @@ from sms.models import Classroom, Course, Grade, HomeWork, Roll, Subject
 
 
 class RollForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=40)
+    last_name = forms.CharField(max_length=40)
+    date_of_birth = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"})
+    )
+    phone_no = forms.CharField(widget=forms.NumberInput)
+    guardian_name = forms.CharField(max_length=100, required=False)
+    guardian_phone_no = forms.CharField(widget=forms.NumberInput)
+    address = forms.CharField(max_length=255, required=False)
+
     class Meta:
         model = Roll
         exclude = (
-            "id",
             "student",
+            "id",
         )
-        widgets = {
-            "year": forms.DateInput(attrs={"type": "date"}),
-        }
 
 
 class CourseForm(forms.ModelForm):
@@ -69,10 +76,42 @@ class HomeWorkForm(forms.ModelForm):
         exclude = ("date_create", "id")
 
 
+# Form Filters
 class GetClassForm(forms.Form):
-    course = forms.CharField(strip=True, required=False)
+    queryset = Course.objects.all()
+    course = forms.ModelChoiceField(queryset=queryset, widget=forms.Select)
 
-    def __init__(self, course=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if course:
-            self.fields["course"].queryset = Course.objects.all()
+    def __init__(self, user=None, **kwargs):
+        super().__init__(**kwargs)
+        if user.role == "TEACHER":
+            pass
+
+
+class GetGradeForm(forms.Form):
+    c_queryset = Classroom.objects.all()
+    s_queryset = Subject.objects.all()
+    classroom = forms.ModelChoiceField(
+        queryset=c_queryset,
+        widget=forms.Select,
+        required=False,
+    )
+    subject = forms.ModelChoiceField(
+        queryset=s_queryset,
+        widget=forms.Select,
+        required=False,
+    )
+
+    def __init__(self, user=None, **kwargs):
+        super().__init__(**kwargs)
+        if user:
+            if user.role == "STUDENT":
+                # self.fields["classroom"].widgets = forms.HiddenInput()
+                del self.fields["classroom"]  # Hide this field instead
+                self.fields[
+                    "subject"
+                ].queryset = user.roll.course.subjects.all()
+
+
+class GetStudentForm(forms.Form):
+    queryset = Classroom.objects.all()
+    classroom = forms.ModelChoiceField(queryset=queryset, initial=queryset[0])

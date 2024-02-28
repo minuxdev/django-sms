@@ -79,7 +79,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=100, null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     phone_no = models.PositiveIntegerField(null=True, blank=True)
-    guardian_name = models.PositiveIntegerField(null=True, blank=True)
+    guardian_name = models.CharField(max_length=100, null=True, blank=True)
     guardian_phone_no = models.CharField(max_length=9, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
 
