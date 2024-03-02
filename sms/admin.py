@@ -1,6 +1,16 @@
 from django.contrib import admin
 
-from .models import Classroom, Course, Grade, HomeWork, Roll, Subject
+from .models import (
+    Classroom,
+    Course,
+    Grade,
+    HomeWork,
+    Parent,
+    Roll,
+    Section,
+    Subject,
+    TeacherContract,
+)
 
 
 @admin.register(Course)
@@ -15,7 +25,6 @@ class CourseAdmin(admin.ModelAdmin):
 class SubjectAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "section",
         "year",
     )
 
@@ -63,3 +72,25 @@ class HomeWorkAdmin(admin.ModelAdmin):
         "date_create",
         "date_close",
     )
+
+
+@admin.register(TeacherContract)
+class TeacherContractAdmin(admin.ModelAdmin):
+    list_display = (
+        "teacher",
+        "category",
+        "status",
+        "date_celebrate",
+        "date_start",
+        "date_end",
+    )
+
+
+@admin.register(Parent)
+class ParentAdmin(admin.ModelAdmin):
+    list_display = ("user", "full_name", "address")
+
+
+@admin.register(Section)
+class SectionAdmin(admin.ModelAdmin):
+    list_display = ("name", "description")

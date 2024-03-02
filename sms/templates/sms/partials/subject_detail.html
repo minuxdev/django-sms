@@ -1,0 +1,30 @@
+<h1>{{subject.name}}</h1>
+
+<p><b>Date Add: </b>{{subject.year}}</p>
+<h2>Courses</h2>
+<hr />
+<ul>
+  {% for course in subject.course.all %}
+  <li>
+    <a href="{% url 'sms:detail_course' pk=course.pk %}">{{course}}</a>
+  </li>
+  {% endfor %}
+</ul>
+<h2>Sections</h2>
+<hr />
+<ul>
+  {% for section in subject.section.all %}
+  <li>
+    <a href="{% url 'sms:detail_section' pk=section.pk %}">{{section}}</a>
+  </li>
+  {% endfor %}
+</ul>
+<h2>Teachers</h2>
+<hr />
+<ul>
+  {% for teacher in subject.teacher.all %}
+  <li>
+    <a href="{% url 'sms:detail_teacher' pk=teacher.pk %}">{{teacher}}</a>
+  </li>
+  {% endfor %}
+</ul>

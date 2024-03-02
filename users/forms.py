@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.admin import UserChangeForm, UserCreationForm
 
-from .models import CustomUser, Profile, Student
+from .models import CustomUser, Profile, Student, Teacher
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -29,6 +29,11 @@ class StudentForm(UserRegistrationForm):
         model = Student
 
 
+class TeacherForm(UserRegistrationForm):
+    class Meta(UserRegistrationForm.Meta):
+        model = Teacher
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -38,7 +43,7 @@ class ProfileForm(forms.ModelForm):
             "phone_no": forms.NumberInput(
                 attrs={"minlength": 4, "maxlength": 9, "type": "number"}
             ),
-            "guardian_phone_no": forms.NumberInput(
+            "parent_phone_no": forms.NumberInput(
                 attrs={"minlength": 4, "maxlength": 9, "type": "number"}
             ),
         }

@@ -1,0 +1,32 @@
+<form method="get">
+  {{form}}
+  <button>get</button>
+</form>
+<div>
+  <table>
+    <caption>
+      List Sections
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for section in sections %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_section' pk=section.pk %}">{{section.pk}}</a>
+        </td>
+        <td>{{section.name}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

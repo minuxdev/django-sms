@@ -3,9 +3,8 @@
   <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Code ID</th>
+        <th>Full Name</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -13,10 +12,14 @@
       {% for roll in classroom.rolls.all %}
       <tr>
         <td>
-          <a href="{% url 'sms:detail_student' pk=roll.pk %}">{{roll.pk}}</a>
+          <a href="{% url 'sms:detail_student' pk=roll.pk %}"
+            >{{roll.student.username}}</a
+          >
         </td>
-        <td>{{roll.student.username}}</td>
-        <td>{{roll.student.username}}</td>
+        <td>
+          {{roll.student.profile.first_name}}
+          {{roll.student.profile.first_name}}
+        </td>
         <td>
           <a href="#">Edit</a>
           <a href="#">Del</a>

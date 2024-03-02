@@ -1,30 +1,29 @@
-<h1>{{teacher}}</h1>
-<p><b>Date Join: </b>{{teacher.date_join}}</p>
-<div>
-  <table>
-    <caption>
-      List Subjects
-    </caption>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Subject</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for subject in teacher.subjects.all %}
-      <tr>
-        <td>
-          <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject.pk}}</a>
-        </td>
-        <td>{{subject.name}}</td>
-        <td>
-          <a href="#">Edit</a>
-          <a href="#">Del</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+<h1>
+  {{teacher.teacher.profile.first_name}} {{teacher.teacher.profile.last_name}}
+</h1>
+
+<p><b>Phone No: </b>{{teacher.teacher.profile.phone_no}}</p>
+<p><b>Address: </b>{{teacher.teacher.profile.address}}</p>
+<p><b>Code: </b>{{teacher.teacher.username}}</p>
+<p><b>Date Celebrate: </b>{{teacher.date_celebrate}}</p>
+<p><b>Date Start: </b>{{teacher.date_start}}</p>
+<p><b>Status: </b>{{teacher.status}}</p>
+<p><b>Class: </b>{{teacher.category}}</p>
+<h2>Subjects</h2>
+<hr />
+<ul>
+  {% for subject in teacher.subject.all %}
+  <li>
+    <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject}}</a>
+  </li>
+  {% endfor %}
+</ul>
+<h2>Classrooms</h2>
+<hr />
+<ul>
+  {% for classroom in teacher.classroom.all %}
+  <li>
+    <a href="{% url 'sms:detail_classroom' pk=classroom.pk %}">{{classroom}}</a>
+  </li>
+  {% endfor %}
+</ul>

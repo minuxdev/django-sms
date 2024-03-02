@@ -1,12 +1,15 @@
 from django.db import models
+from django.utils import timezone
 
-from users.models import Student, Teacher
+from users.models import CustomUser, Student, Teacher
 
 
-class SECTION(models.TextChoices):
-    A = "A", "A"
-    B = "B", "B"
-    C = "C", "C"
+class Section(models.Model):
+    name = models.CharField(max_length=20, default="A")
+    description = models.TextField(max_length=300, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Course(models.Model):
@@ -26,6 +29,11 @@ class Classroom(models.Model):
         blank=True,
         related_name="classrooms",
     )
+    teacher = models.ManyToManyField(
+        to=Teacher,
+        blank=True,
+        related_name="classrooms",
+    )
     name = models.CharField(max_length=100)
     year = models.DateField(auto_now=True)
 
@@ -34,6 +42,10 @@ class Classroom(models.Model):
 
 
 class Subject(models.Model):
+    class STATUS(models.TextChoices):
+        ACTIVE = "ACTIVE", "Active"
+        CANCELED = "CANCELED", "Canceled"
+
     course = models.ManyToManyField(
         to=Course,
         blank=True,
@@ -43,10 +55,17 @@ class Subject(models.Model):
         to=Teacher, blank=True, related_name="subjects"
     )
     name = models.CharField(max_length=100)
-    section = models.CharField(
-        max_length=50, choices=SECTION.choices, default=SECTION.A
+    section = models.ManyToManyField(
+        to=Section,
+        blank=True,
+        related_name="subjects",
     )
     year = models.DateField(auto_now=True)
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS.choices,
+        default=STATUS.ACTIVE,
+    )
 
     def __str__(self):
         return str(self.name)
@@ -77,8 +96,12 @@ class Roll(models.Model):
 
 
 class Grade(models.Model):
-    section = models.CharField(
-        max_length=50, choices=SECTION.choices, default=SECTION.A
+    section = models.ForeignKey(
+        to=Section,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="grades",
     )
     subject = models.ForeignKey(
         to=Subject,
@@ -166,3 +189,54 @@ class HomeWork(models.Model):
 
     def __str__(self):
         return str(self.topic)
+
+
+class TeacherContract(models.Model):
+    class STATUS(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        ACTIVE = "ACTIVE", "Active"
+        CANCELED = "CANCELED", "Canceled"
+        SUSPENDED = "SUSPENDED", "Suspended"
+        END = "ENDED", "Ended"
+
+    teacher = models.OneToOneField(
+        to=Teacher, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    classroom = models.ManyToManyField(
+        to=Classroom,
+        blank=True,
+        related_name="classrooms",
+    )
+    subject = models.ManyToManyField(
+        to=Subject, blank=True, related_name="subjects"
+    )
+    category = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(
+        max_length=10, choices=STATUS.choices, default=STATUS.PENDING
+    )
+    date_celebrate = models.DateField(auto_now_add=True)
+    date_start = models.DateField(null=True, blank=True)
+    date_end = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.teacher)
+
+    def save(self, **kwargs):
+        if self.status == "ENDED":
+            self.date_end = timezone.now()
+        else:
+            self.date_end = None
+        return super().save(**kwargs)
+
+
+class Parent(models.Model):
+    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    student = models.ManyToManyField(
+        to=Student, blank=True, related_name="parents"
+    )
+    address = models.CharField(max_length=255, null=True, blank=True)
+    phone_no = models.CharField(max_length=10, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.full_name)

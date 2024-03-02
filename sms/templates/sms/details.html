@@ -13,6 +13,10 @@
         {% include 'sms/partials/grade_detail.html' with grade=grade %}
     {% elif homework %}
         {% include 'sms/partials/homework_detail.html' with homework=homework %}
+    {% elif subject %}
+        {% include 'sms/partials/subject_detail.html' with subject=subject %}
+    {% elif section %}
+        {% include 'sms/partials/section_detail.html' with section=section %}
     {% else %}
         {% include 'sms/partials/classroom_detail.html' with classroom=classroom %}
     {% endif %}

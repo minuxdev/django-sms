@@ -10,14 +10,21 @@ urlpatterns = [
     path("dashboard/", views.RollView.as_view(), name="dashboard"),
     path("courses/", views.CourseView.as_view(), name="list_course"),
     path("subjects/", views.SubjectView.as_view(), name="list_subject"),
+    path("section/", views.SectionView.as_view(), name="list_section"),
     path("classrooms/", views.ClassroomView.as_view(), name="list_classroom"),
     path("grades/", views.GradeView.as_view(), name="list_grade"),
     path("teachers/", views.TeacherView.as_view(), name="list_teacher"),
     path("home-works/", views.HomeWrokView.as_view(), name="list_homework"),
     # CREATE
-    path("add/roll/", views.RollCreateView.as_view(), name="add_roll"),
+    path("add/student/", views.RollCreateView.as_view(), name="add_student"),
+    path(
+        "add/teacher/", views.TeacherCreateView.as_view(), name="add_teacher"
+    ),
     path("add/course/", views.CourseCreateView.as_view(), name="add_course"),
     path("add/grade/", views.GradeCreateView.as_view(), name="add_grade"),
+    path(
+        "add/section/", views.SectionCreateView.as_view(), name="add_section"
+    ),
     path(
         "add/subject/", views.SubjectCreateView.as_view(), name="add_subject"
     ),
@@ -33,7 +40,7 @@ urlpatterns = [
     ),
     # DETAILS
     path(
-        "roll/<pk>/detail/",
+        "student/<pk>/detail/",
         views.RollDetailView.as_view(),
         name="detail_student",
     ),
@@ -46,6 +53,11 @@ urlpatterns = [
         "subject/<pk>/detail/",
         views.SubjectDetailView.as_view(),
         name="detail_subject",
+    ),
+    path(
+        "section/<pk>/detail/",
+        views.SectionDetailView.as_view(),
+        name="detail_section",
     ),
     path(
         "class/<pk>/detail/",

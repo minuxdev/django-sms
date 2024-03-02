@@ -13,7 +13,13 @@
         {% include 'sms/partials/grades.html' with grades=grades %}
     {% elif homeworks %}
         {% include 'sms/partials/homeworks.html' with homeworks=homeworks %}
-    {% else %}
+    {% elif classrooms %}
         {% include 'sms/partials/classrooms.html' with classrooms=classrooms %}
+    {% elif subjects %}
+        {% include 'sms/partials/subjects.html' with subjects=subjects %}
+    {% elif sections %}
+        {% include 'sms/partials/sections.html' with sections=sections %}
+    {% else %}
+        <h1>No record found!</h1>
     {% endif %}
 {% endblock content %}

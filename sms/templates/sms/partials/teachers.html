@@ -1,3 +1,7 @@
+<form method="get">
+  {{form}}
+  <button>get</button>
+</form>
 <div>
   <table>
     <caption>
@@ -8,7 +12,11 @@
         <th>ID</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>Year</th>
+        <th>Category</th>
+        <th>Date Celebrate</th>
+        <th>Date Start</th>
+        <th>Status</th>
+        <th>Date Close</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -16,11 +24,17 @@
       {% for teacher in teachers %}
       <tr>
         <td>
-          <a href="{% url 'sms:detail_teacher' pk=teacher.pk %}">{{teacher.pk}}</a>
+          <a href="{% url 'sms:detail_teacher' pk=teacher.pk %}"
+            >{{teacher.pk}}</a
+          >
         </td>
-        <td>{{teacher.username}}</td>
-        <td>{{teacher.username}}</td>
-        <td>{{teacher.date_join}}</td>
+        <td>{{teacher.teacher.profile.first_name}}</td>
+        <td>{{teacher.teacher.profile.last_name}}</td>
+        <td>{{teacher.category}}</td>
+        <td>{{teacher.date_celebrate}}</td>
+        <td>{{teacher.date_start}}</td>
+        <td>{{teacher.status}}</td>
+        <td>{{teacher.date_end}}</td>
         <td>
           <a href="#">Edit</a>
           <a href="#">Del</a>

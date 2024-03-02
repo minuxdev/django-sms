@@ -1,10 +1,12 @@
-<form>
-  {{form}}
-  <button>submit</button>
-</form>
 <div>
-  <h1>{{classroom.name}}</h1>
+  <form>
+    {{form}}
+    <button>submit</button>
+  </form>
   <table>
+    <caption>
+      List Classrooms
+    </caption>
     <thead>
       <tr>
         <th>ID</th>
@@ -18,7 +20,9 @@
       {% for classroom in classrooms %}
       <tr>
         <td>
-          <a href="{% url 'sms:detail_classroom' pk=classroom.pk %}">{{classroom.pk}}</a>
+          <a href="{% url 'sms:detail_classroom' pk=classroom.pk %}"
+            >{{classroom.pk}}</a
+          >
         </td>
         <td>{{classroom.name}}</td>
         <td>{{classroom.course}}</td>

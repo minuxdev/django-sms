@@ -1,0 +1,35 @@
+<h1>{{section.name}}</h1>
+<p>{{section.description}}</p>
+<hr />
+<div>
+  <table>
+    <caption>
+      List Subjects
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Date Added</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in section.subjects.all %}
+      <tr>
+        <td>
+          <a href="{% url 'sms:detail_subject' pk=subject.pk %}">{{subject.pk}}</a>
+        </td>
+        <td>{{subject.name}}</td>
+        <td>{{subject.year}}</td>
+        <td>{{subject.status}}</td>
+        <td>
+          <a href="#">Edit</a>
+          <a href="#">Del</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
