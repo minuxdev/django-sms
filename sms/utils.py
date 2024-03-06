@@ -1,3 +1,6 @@
+from django.contrib.auth.models import Group
+
+
 def format_grades(course, subject=None, student=None):
     a = None
     b = None
@@ -19,12 +22,11 @@ def format_grades(course, subject=None, student=None):
         for __subject in subjects:
             for grade in __subject.grades.filter(student=roll.student):
                 __student = grade.student
-                print(grade)
-                if grade.section == "A":
+                if grade.section.name == "A":
                     a = grade or None
-                elif grade.section == "B":
+                elif grade.section.name == "B":
                     b = grade or None
-                elif grade.section == "C":
+                elif grade.section.name == "C":
                     c = grade or None
             if __student is not None:
                 grades.append(
@@ -42,3 +44,9 @@ def format_grades(course, subject=None, student=None):
             c = None
             __student = None
     return grades
+
+
+def add_user_to_group(user=None):
+    if user:
+        group, _ = Group.objects.get_or_create(name=user.role)
+        user.groups.add(group)

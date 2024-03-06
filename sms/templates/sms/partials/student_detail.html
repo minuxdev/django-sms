@@ -1,16 +1,22 @@
-<h1>{{student.roll.profile.first_name}} {{student.roll.profile.last_name}}</h1>
+<h1>
+  {{student.roll.student.profile.first_name}}
+  {{student.roll.student.profile.last_name}}
+</h1>
 <p><b>Date of Birth: </b>{{student.roll.student.profile.dob}}</p>
 <p><b>Phone No: </b>{{student.roll.student.profile.phone_no}}</p>
 <p>
-  <b>Parent: </b
-  ><a href="">{{student.roll.student.parents.first.user.username}}</a>
+  <b>Parent: </b><a href="">{{student.roll.student.parents.first.full_name}}</a>
 </p>
 <p>
-  <b>Parent Phone No: </b
-  ><a href="tel:{{student.roll.student.profile.parent_phone_no}}">
+  <b>Parent Phone No: </b><a href="tel:{{student.roll.student.profile.parent_phone_no}}">
     {{student.roll.student.profile.parent_phone_no}}
   </a>
 </p>
+<address>
+  <p><b>Student Address: </b>{{student.roll.student.profile.address}}</p>
+  <p><b>Parent Address: </b>{{student.roll.student.profile.parent_address}}</p>
+</address>
+<br />
 <p><b>Code: </b>{{student.roll.student.username}}</p>
 <p><b>Course: </b>{{student.roll.course}}</p>
 <p><b>Classroom: </b>{{student.roll.classroom}}</p>
@@ -49,9 +55,7 @@
       {% for g in student.grades %}
       <tr>
         <td>
-          <a href="{% url 'sms:detail_subject' pk=g.subject.pk %}"
-            >{{g.subject}}</a
-          >
+          <a href="{% url 'sms:detail_subject' pk=g.subject.pk %}">{{g.subject}}</a>
         </td>
         <td>{{g.a.test_1}}</td>
         <td>{{g.a.test_2}}</td>

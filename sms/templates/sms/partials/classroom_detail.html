@@ -4,7 +4,7 @@
     <thead>
       <tr>
         <th>Code ID</th>
-        <th>Full Name</th>
+        <th>Student Name</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -12,13 +12,10 @@
       {% for roll in classroom.rolls.all %}
       <tr>
         <td>
-          <a href="{% url 'sms:detail_student' pk=roll.pk %}"
-            >{{roll.student.username}}</a
-          >
+          <a href="{% url 'sms:detail_student' pk=roll.pk %}">{{roll.student.username}}</a>
         </td>
         <td>
-          {{roll.student.profile.first_name}}
-          {{roll.student.profile.first_name}}
+          {{roll.student.profile.first_name}} {{roll.student.profile.last_name}}
         </td>
         <td>
           <a href="#">Edit</a>

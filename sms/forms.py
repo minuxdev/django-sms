@@ -25,6 +25,7 @@ class RegistrationForm(forms.ModelForm):
 class StudentRegistrationForm(RegistrationForm):
     parent_name = forms.CharField(max_length=100, required=False)
     parent_phone_no = forms.CharField(widget=forms.NumberInput)
+    parent_address = forms.CharField(max_length=255, required=False)
 
     class Meta:
         model = Roll
@@ -75,6 +76,12 @@ class ClassroomForm(forms.ModelForm):
             "year": forms.DateInput(attrs={"type": "date"}),
         }
 
+    def clean_course(self):
+        course = self.cleaned_data["course"]
+        if not course:
+            return ValueError("Course cannot be empty.")
+        return course
+
 
 class SectionForm(forms.ModelForm):
     class Meta:
@@ -90,6 +97,12 @@ class SubjectForm(forms.ModelForm):
             "year": forms.DateInput(attrs={"type": "date"}),
             "section": forms.CheckboxSelectMultiple,
         }
+
+    def clean_course(self):
+        course = self.cleaned_data["course"]
+        if not course:
+            return ValueError("Course cannot be empty.")
+        return course
 
 
 class GradeForm(forms.ModelForm):
@@ -108,10 +121,16 @@ class GradeForm(forms.ModelForm):
             "section": forms.RadioSelect,
         }
 
-    def __init__(self, teacher=None, *args, **kwargs):
+    def clean_student(self, **kwargs):
+        student = self.cleaned_data["student"]
+        if not student:
+            return ValueError("Student cannot be empty.")
+        return student
+
+    def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if teacher:
-            queryset = Subject.objects.filter(teacher=teacher)
+        if user and user.role == "TEACHER":
+            queryset = Subject.objects.filter(teacher=user)
             self.fields["subject"].queryset = queryset
             self.fields["subject"].initial = queryset[0] if queryset else None
 
@@ -122,7 +141,7 @@ class HomeWorkForm(forms.ModelForm):
         exclude = ("date_create", "id")
 
 
-# Form Filters
+# Filters
 class GetClassForm(forms.Form):
     queryset = Course.objects.all()
     course = forms.ModelChoiceField(queryset=queryset, widget=forms.Select)

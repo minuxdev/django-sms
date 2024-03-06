@@ -3,6 +3,11 @@
     List Students
 {% endblock title %}
 {% block content %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}
+        </div>
+    {% endif %}
     {% if students %}
         {% include 'sms/partials/students.html' with students=students %}
     {% elif courses %}

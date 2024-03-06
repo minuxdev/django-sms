@@ -31,7 +31,7 @@
         <td>{{student.classroom}}</td>
         <td>{{student.year}}</td>
         <td>
-          <a href="#">Edit</a>
+          <a href="{% url 'sms:edit_student' pk=student.pk%}">Edit</a>
           <a href="#">Del</a>
         </td>
       </tr>

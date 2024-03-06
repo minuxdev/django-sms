@@ -1,6 +1,13 @@
+from django.contrib import messages
 from django.db import transaction
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    FormView,
+    ListView,
+    UpdateView,
+)
 
 from sms.forms import (
     ClassroomForm,
@@ -21,6 +28,7 @@ from sms.forms import (
 from users.forms import StudentForm, TeacherForm, UserRegistrationForm
 from users.models import Profile, Student, Teacher
 
+from . import utils
 from .models import (
     Classroom,
     Course,
@@ -32,7 +40,6 @@ from .models import (
     Subject,
     TeacherContract,
 )
-from .utils import format_grades
 
 
 # ROLLS
@@ -64,7 +71,7 @@ class RollDetailView(DetailView):
         subject = self.request.GET.get("subject", None)
         context["student"] = {
             "roll": self.object,
-            "grades": format_grades(
+            "grades": utils.format_grades(
                 course=self.object.course,
                 student=self.object.student,
                 subject=subject,
@@ -75,7 +82,7 @@ class RollDetailView(DetailView):
 
 
 # Only staff
-class RollCreateView(CreateView):
+class RollCreateView(FormView):
     template_name = "sms/forms.html"
     form_class = StudentRegistrationForm
     model = Roll
@@ -95,6 +102,7 @@ class RollCreateView(CreateView):
         # Create student
         s_form = StudentForm(data=s_data)
         student = s_form.save()
+        utils.add_user_to_group(student)
 
         profile = Profile(user=student)
         for key, value in data.items():
@@ -127,9 +135,38 @@ class RollCreateView(CreateView):
 
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        print(form.errors)
-        return super().form_invalid(form)
+
+class RollUpdateView(UpdateView):
+    template_name = "sms/forms.html"
+    form_class = StudentRegistrationForm
+    model = Roll
+    success_url = reverse_lazy("sms:dashboard")
+
+    def get_initial(self):
+        profile = self.get_object().student.profile
+        initial_data = super().get_initial()
+
+        initial_data["first_name"] = profile.first_name
+        initial_data["last_name"] = profile.last_name
+        initial_data["date_of_birth"] = profile.dob
+        initial_data["phone_no"] = profile.phone_no
+        initial_data["parent_phone_no"] = profile.parent_phone_no
+        initial_data["parent_address"] = profile.parent_address
+        initial_data["parent_name"] = profile.parent_name
+        initial_data["address"] = profile.address
+        return initial_data
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+
+        roll = form.save()
+
+        profile = Profile.objects.get(user=roll.student)
+        for key, value in data.items():
+            setattr(profile, key, value)
+        profile.save()
+
+        return super().form_valid(form)
 
 
 # TEACHER
@@ -172,6 +209,10 @@ class TeacherView(ListView):
                 status=status,
             )
 
+        if not query:
+            messages.info(self.request, "No record found!")
+            query = self.object_list
+
         context["teachers"] = query
         return context
 
@@ -187,7 +228,7 @@ class TeacherDetailView(DetailView):
 
 
 # Only Staff
-class TeacherCreateView(CreateView):
+class TeacherCreateView(FormView):
     template_name = "sms/forms.html"
     model = TeacherContract
     form_class = TeacherRegistrationForm
@@ -203,11 +244,8 @@ class TeacherCreateView(CreateView):
             "role": "TEACHER",
         }
         t_form = TeacherForm(data=data)
-        t = Teacher.objects.all()
-        for i in t:
-            print(i.username)
-        print(t_form.data)
         teacher = t_form.save()
+        utils.add_user_to_group(teacher)
 
         profile = Profile(user=teacher)
         for key, value in form.cleaned_data.items():
@@ -218,6 +256,40 @@ class TeacherCreateView(CreateView):
         contract.teacher = teacher
         contract.save()
 
+        return super().form_valid(form)
+
+
+class TeacherUpdateView(UpdateView):
+    template_name = "sms/forms.html"
+    model = TeacherContract
+    form_class = TeacherRegistrationForm
+    success_url = reverse_lazy("sms:list_teacher")
+
+    def get_initial(self):
+        initial_data = super().get_initial()
+        contract = self.get_object()
+        teacher = contract.teacher
+        initial_data["first_name"] = teacher.profile.first_name
+        initial_data["last_name"] = teacher.profile.last_name
+        initial_data["date_of_birth"] = teacher.profile.dob
+        initial_data["phone_no"] = teacher.profile.phone_no
+        initial_data["address"] = teacher.profile.address
+        initial_data["category"] = contract.category
+        initial_data["classroom"] = contract.classroom.all()
+        initial_data["subject"] = contract.subject.all()
+        initial_data["status"] = contract.status
+        initial_data["date_start"] = contract.date_start
+
+        return initial_data
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        contract = self.get_object()
+        profile = Profile.objects.get(user=contract.teacher)
+
+        for key, value in data.items():
+            setattr(profile, key, value)
+        profile.save()
         return super().form_valid(form)
 
 
@@ -335,7 +407,6 @@ class GradeView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         queryset = self.object_list
-        print(queryset)
 
         # Filter by classroom and subject
         context["form"] = GetGradeForm(user=self.request.user)
@@ -344,16 +415,22 @@ class GradeView(ListView):
 
         if classroom and subject:
             course = Classroom.objects.get(pk=classroom).course
-            queryset = format_grades(course=course, subject=subject)
+            queryset = utils.format_grades(course=course, subject=subject)
         elif classroom and not subject:
             course = Classroom.objects.get(pk=classroom).course
-            queryset = format_grades(course=course)
+            queryset = utils.format_grades(course=course)
         elif not classroom and subject:
             course = Course.objects.first()
             if not course:
                 context["grades"] = []
                 return context
-            queryset = format_grades(course=course, subject=subject)
+            queryset = utils.format_grades(course=course, subject=subject)
+        else:
+            course = Course.objects.first()
+            if not course:
+                context["grades"] = []
+                return context
+            queryset = utils.format_grades(course=course)
 
         context["grades"] = queryset
         return context
@@ -368,7 +445,7 @@ class GradeDetailView(DetailView):
         context = super().get_context_data(*args, **kwargs)
         student = self.object.student
         course = student.roll.course
-        context["grade"] = format_grades(course, student=student)
+        context["grade"] = utils.format_grades(course, student=student)
         return context
 
 
@@ -381,7 +458,7 @@ class GradeCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = GradeForm(teacher=self.request.user)
+        context["form"] = GradeForm(user=self.request.user)
         return context
 
 
